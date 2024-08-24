@@ -8,7 +8,26 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
       table { margin-left: auto; margin-right: auto; }
       td { padding: 8 px; }
       .button {
-        background-color: #2f4468;
+        background-color: #354597;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 18px;
+        margin: 6px 3px;
+        cursor: pointer;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: rgba(139, 32, 32, 0);
+      }
+      .button-blue {
+        background-color: #69a53b;
         border: none;
         color: white;
         padding: 10px 20px;
@@ -26,6 +45,7 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
         user-select: none;
         -webkit-tap-highlight-color: rgba(0,0,0,0);
       }
+
       img {  width: auto ;
         max-width: 100% ;
         height: auto ; 
@@ -33,10 +53,10 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
     </style>
   </head>
   <body>
-    <h1>ESP32-CAM Robot</h1>
+    <h1>Coding Pirates Nyborg ESP32-CAM Robot</h1>
     <img src="" id="photo" >
     <table>
-      <tr><td colspan="3" align="center"><button class="button" onmousedown="toggleCheckbox('forward');" ontouchstart="toggleCheckbox('forward');" onmouseup="toggleCheckbox('stop');" ontouchend="toggleCheckbox('stop');">Forward</button></td></tr>
+      <tr><td colspan="3" align="center"><button class="button-blue" onmousedown="toggleCheckbox('forward');" ontouchstart="toggleCheckbox('forward');" onmouseup="toggleCheckbox('stop');" ontouchend="toggleCheckbox('stop');">Forward</button></td></tr>
       <tr><td align="center"><button class="button" onmousedown="toggleCheckbox('left');" ontouchstart="toggleCheckbox('left');" onmouseup="toggleCheckbox('stop');" ontouchend="toggleCheckbox('stop');">Left</button></td><td align="center"><button class="button" onmousedown="toggleCheckbox('stop');" ontouchstart="toggleCheckbox('stop');">Stop</button></td><td align="center"><button class="button" onmousedown="toggleCheckbox('right');" ontouchstart="toggleCheckbox('right');" onmouseup="toggleCheckbox('stop');" ontouchend="toggleCheckbox('stop');">Right</button></td></tr>
       <tr><td colspan="3" align="center"><button class="button" onmousedown="toggleCheckbox('backward');" ontouchstart="toggleCheckbox('backward');" onmouseup="toggleCheckbox('stop');" ontouchend="toggleCheckbox('stop');">Backward</button></td></tr>                   
     </table>
@@ -50,4 +70,5 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
   </script>
   </body>
 </html>
+
 )rawliteral";
