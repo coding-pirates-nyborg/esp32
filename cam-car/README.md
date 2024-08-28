@@ -6,5 +6,5 @@ Dette projekt bygger på denne [artikel](https://randomnerdtutorials.com/esp32-c
 
 ## Parts List (BOM)]
 
-[Parts List](/docs/bom.md)
+[Parts List](./docs/bom.md)
 ---
