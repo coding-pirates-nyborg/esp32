@@ -105,11 +105,22 @@
   #error "Camera model not selected"
 #endif
 
+/*-----------------------GPIO-------------------*/
+
 #define MOTOR_1_PIN_1    14
 #define MOTOR_1_PIN_2    15
 #define MOTOR_2_PIN_1    13
 #define MOTOR_2_PIN_2    12
 
+#define NEO_PIXEL_FRONT   2
+#define NEO_PIXEL_REAR    16
+
+#define CAMERA_FLASH      4  
+
+
+/*-----------------------CAMERA STREAM---------------*/
 static const char* _STREAM_CONTENT_TYPE = "multipart/x-mixed-replace;boundary=" PART_BOUNDARY;
 static const char* _STREAM_BOUNDARY = "\r\n--" PART_BOUNDARY "\r\n";
 static const char* _STREAM_PART = "Content-Type: image/jpeg\r\nContent-Length: %u\r\n\r\n";
+
+

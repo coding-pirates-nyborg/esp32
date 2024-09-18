@@ -201,6 +201,11 @@ void startCameraServer(){
 
 void setup() {
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
+
+  pinMode(CAMERA_FLASH, OUTPUT); // 
+
+  pinMode(NEO_PIXEL_FRONT, OUTPUT);
+  pinMode(NEO_PIXEL_REAR, OUTPUT);
   
   pinMode(MOTOR_1_PIN_1, OUTPUT);
   pinMode(MOTOR_1_PIN_2, OUTPUT);
@@ -243,8 +248,9 @@ void setup() {
   }
 
   // Replace with your network credentials
-  const char* ssid = "abcdefghi";
-  const char* password = "pass1234";
+  const char* ssid = "coding-pirates-bil";
+  const char* password = "codingpirates";
+  const int channel = 9;
   
   // Camera init
   esp_err_t err = esp_camera_init(&config);
@@ -254,13 +260,15 @@ void setup() {
   }
 
   // Wi-Fi connection
-  WiFi.softAP(ssid, password);
+  WiFi.softAP(ssid, password, channel);
 
   Serial.println("");
   Serial.println("WiFi connected");
   
   Serial.print("Camera Stream Ready! Go to: http://");
   Serial.println(WiFi.softAPIP());
+
+ // turn_off_all_lights();
   
   // Start streaming web server
   startCameraServer();
