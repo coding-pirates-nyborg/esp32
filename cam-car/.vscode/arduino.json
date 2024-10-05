@@ -1,3 +1,7 @@
 {
-    "port": "/dev/ttyUSB0"
+    "port": "/dev/ttyUSB0",
+    "configuration": "CPUFreq=240,FlashMode=qio,PartitionScheme=huge_app,FlashFreq=80,DebugLevel=none,EraseFlash=none",
+    "board": "esp32:esp32:esp32cam",
+    "sketch": "src/arduino/arduino.ino",
+    "output": "build/arduino"
 }
