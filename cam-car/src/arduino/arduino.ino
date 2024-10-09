@@ -95,7 +95,7 @@ static esp_err_t stream_handler(httpd_req_t *req){
 static esp_err_t cmd_handler(httpd_req_t *req){
   char*  buf;
   size_t buf_len;
-  char variable[32] = {0,};
+  char direction[32] = {0,};
   
   buf_len = httpd_req_get_url_query_len(req) + 1;
   if (buf_len > 1) {
@@ -105,18 +105,18 @@ static esp_err_t cmd_handler(httpd_req_t *req){
       return ESP_FAIL;
     }
     if (httpd_req_get_url_query_str(req, buf, buf_len) == ESP_OK) {
-      if (httpd_query_key_value(buf, "go", variable, sizeof(variable)) == ESP_OK) {
+      if (httpd_query_key_value(buf, "move", direction, sizeof(direction)) == ESP_OK) {
       } else {
         free(buf);
         httpd_resp_send_404(req);
         return ESP_FAIL;
       }
+    free(buf);
     } else {
       free(buf);
       httpd_resp_send_404(req);
       return ESP_FAIL;
     }
-    free(buf);
   } else {
     httpd_resp_send_404(req);
     return ESP_FAIL;
@@ -125,35 +125,35 @@ static esp_err_t cmd_handler(httpd_req_t *req){
   sensor_t * s = esp_camera_sensor_get();
   int res = 0;
   
-  if(!strcmp(variable, "forward")) {
+  if(!strcmp(direction, "forward")) {
     Serial.println("Forward");
     digitalWrite(MOTOR_1_PIN_1, 1);
     digitalWrite(MOTOR_1_PIN_2, 0);
     digitalWrite(MOTOR_2_PIN_1, 1);
     digitalWrite(MOTOR_2_PIN_2, 0);
   }
-  else if(!strcmp(variable, "left")) {
+  else if(!strcmp(direction, "left")) {
     Serial.println("Left");
     digitalWrite(MOTOR_1_PIN_1, 0);
     digitalWrite(MOTOR_1_PIN_2, 1);
     digitalWrite(MOTOR_2_PIN_1, 1);
     digitalWrite(MOTOR_2_PIN_2, 0);
   }
-  else if(!strcmp(variable, "right")) {
+  else if(!strcmp(direction, "right")) {
     Serial.println("Right");
     digitalWrite(MOTOR_1_PIN_1, 1);
     digitalWrite(MOTOR_1_PIN_2, 0);
     digitalWrite(MOTOR_2_PIN_1, 0);
     digitalWrite(MOTOR_2_PIN_2, 1);
   }
-  else if(!strcmp(variable, "backward")) {
+  else if(!strcmp(direction, "backward")) {
     Serial.println("Backward");
     digitalWrite(MOTOR_1_PIN_1, 0);
     digitalWrite(MOTOR_1_PIN_2, 1);
     digitalWrite(MOTOR_2_PIN_1, 0);
     digitalWrite(MOTOR_2_PIN_2, 1);
   }
-  else if(!strcmp(variable, "stop")) {
+  else if(!strcmp(direction, "stop")) {
     Serial.println("Stop");
     digitalWrite(MOTOR_1_PIN_1, 0);
     digitalWrite(MOTOR_1_PIN_2, 0);
@@ -254,7 +254,7 @@ void setup() {
   }
 
   // Replace with your network credentials
-  const char* ssid = "coding-pirates-bil";
+  const char* ssid = "bryndis-pirates-bil";
   const char* password = "codingpirates";
   const int channel = 9;
   
