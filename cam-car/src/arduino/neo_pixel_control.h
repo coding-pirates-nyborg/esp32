@@ -2,7 +2,6 @@
 #define NEO_PIXEL_CONTROL_H
 
 #include <FastLED.h>
-#include <constants.h>
 #include <neo_pixel.h>
 
 /*----------------------NEO_PIXEL---------------------*/

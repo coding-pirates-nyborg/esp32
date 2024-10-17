@@ -19,14 +19,8 @@
 #include "constants.h"
 #include "neo_pixel_control.h"
 
-
 httpd_handle_t camera_httpd = NULL;
 httpd_handle_t stream_httpd = NULL;
-
-/*-----------------------CAMERA STREAM---------------*/
-static const char* _STREAM_CONTENT_TYPE = "multipart/x-mixed-replace;boundary=" PART_BOUNDARY;
-static const char* _STREAM_BOUNDARY = "\r\n--" PART_BOUNDARY "\r\n";
-static const char* _STREAM_PART = "Content-Type: image/jpeg\r\nContent-Length: %u\r\n\r\n";
 
 static esp_err_t index_handler(httpd_req_t *req){
   httpd_resp_set_type(req, "text/html");
@@ -254,7 +248,7 @@ void setup() {
   }
 
   // Replace with your network credentials
-  const char* ssid = "bryndis-pirates-bil";
+  const char* ssid = "frey-pirates-bil";
   const char* password = "codingpirates";
   const int channel = 9;
   
