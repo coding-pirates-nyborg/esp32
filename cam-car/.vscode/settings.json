@@ -10,5 +10,12 @@
   ],
   "arduino.path": "",
   "arduino.useArduinoCli": true,
-  "arduino.commandPath": ""
+  "arduino.commandPath": "",
+  "files.associations": {
+    "*.docker": "dockerfile",
+    "*.dockerfile": "dockerfile",
+    ".env*": "dotenv",
+    "iostream": "cpp",
+    "new": "cpp"
+  }
 }

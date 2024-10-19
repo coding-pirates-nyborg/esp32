@@ -76,30 +76,37 @@
 
 <body>
   <h1>Coding Pirates Nyborg ESP32-CAM Robot</h1>
-  <div id="cam">
+  <!-- <div id="cam"> -->
     <img src="" class="avatar" id="cam" alt="Camera stream not available"
       onerror="this.onerror=null;this.src='avatar.jpeg';">
-  </div>
-  <div id="carControl">
+  <!-- </div> -->
+  <!-- <div id="carControl"> -->
     <table>
       <tr>
-        <td colspan="3" align="center"><button class="button-blue" onmousedown="move('forward');"
-            ontouchstart="move('forward');" onmouseup="move('stop');" ontouchend="move('stop');">Forward</button></td>
+        <td colspan="3" align="center"><button class="button-blue" onmousedown="sendCommand('forward');"
+            ontouchstart="sendCommand('forward');" onmouseup="sendCommand('stop');" ontouchend="sendCommand('stop');">Forward</button></td>
       </tr>
       <tr>
-        <td align="center"><button class="button" onmousedown="move('left');" ontouchstart="move('left');"
-            onmouseup="move('stop');" ontouchend="move('stop');">Left</button></td>
-        <td align="center"><button class="button" onmousedown="move('stop');" ontouchstart="move('stop');">Stop</button>
+        <td align="center"><button class="button" onmousedown="sendCommand('left');" ontouchstart="sendCommand('left');"
+            onmouseup="sendCommand('stop');" ontouchend="sendCommand('stop');">Left</button></td>
+        <td align="center"><button class="button" onmousedown="sendCommand('stop');" ontouchstart="sendCommand('stop');">Stop</button>
         </td>
-        <td align="center"><button class="button" onmousedown="move('right');" ontouchstart="move('right');"
-            onmouseup="move('stop');" ontouchend="move('stop');">Right</button></td>
+        <td align="center"><button class="button" onmousedown="sendCommand('right');" ontouchstart="sendCommand('right');"
+            onmouseup="sendCommand('stop');" ontouchend="sendCommand('stop');">Right</button></td>
       </tr>
       <tr>
-        <td colspan="3" align="center"><button class="button" onmousedown="move('backward');"
-            ontouchstart="move('backward');" onmouseup="move('stop');" ontouchend="move('stop');">Backward</button></td>
+        <td colspan="3" align="center"><button class="button" onmousedown="sendCommand('backward');"
+            ontouchstart="sendCommand('backward');" onmouseup="sendCommand('stop');" ontouchend="sendCommand('stop');">Backward</button></td>
       </tr>
     </table>
-  </div>
+
+    <table>
+      <tr>
+        <td rowspan="3" align="center"><button class="button" onmousedown="sendCommand('killLEDS');">Kill LEDS</button></td>
+        <td rowspan="3" align="center"><button class="button" onmousedown="sendCommand('turnOnLEDS');"> Turn on LED's</button></td>
+      </tr>
+    </table>
+  <!-- </div> -->
   <script>
     // localStorage.setItem('showNeopixelControl', true);
     if (localStorage.getItem('showNeopixelControl') === 'true') {
@@ -129,11 +136,13 @@
       }; xhr.send();
     }
 
-    function move(direction) {
+    function sendCommand(cmd) {
+      console.log(`Sending cmd: ${cmd} to ESP32-CAM`);
       var xhr = new XMLHttpRequest();
-      xhr.open("GET", "/action?move=" + direction, true);
+      xhr.open("GET", "/action?cmd=" + cmd, true);
       xhr.send();
     }
+
     window.onload = document.getElementById("cam").src = window.location.href.slice(0, -1) + ":81/stream";
   </script>
 </body>

@@ -35,7 +35,12 @@ void NeoPixelControl::turn_on() {
 
 // Implement other methods similarly
 void NeoPixelControl::turn_off_all_lights() {
-    // Implementation
+    Serial.println("Turning off all lights");
+    for (int i = 0; i < num_leds; ++i) {
+        FastLED.setBrightness(0); // Set brightness to 0
+        FastLED.showColor(CRGB::Black); // Show the color
+        //FastLED.clear(); // Clear the color
+    }
 }
 
 void NeoPixelControl::blink(NeoPixel* pixels, int duration_ms, int delay_ms) {
@@ -52,7 +57,7 @@ void NeoPixelControl::setup() {
 }
 
 void NeoPixelControl::loop()
-{
+{ 
     ChangePalettePeriodically();
     
     static uint8_t startIndex = 0;
@@ -61,7 +66,7 @@ void NeoPixelControl::loop()
     FillLEDsFromPaletteColors( startIndex);
     
     FastLED.show();
-    FastLED.delay(1000 / UPDATES_PER_SECOND);
+    FastLED.delay(1000 / UPDATES_PER_SECOND);   
 }
 
 void NeoPixelControl::FillLEDsFromPaletteColors(uint8_t colorIndex)
