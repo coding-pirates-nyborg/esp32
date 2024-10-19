@@ -12,8 +12,8 @@
 #include "img_converters.h"
 #include "Arduino.h"
 #include "fb_gfx.h"
-#include "soc/soc.h"             // disable brownout problems
-#include "soc/rtc_cntl_reg.h"    // disable brownout problems
+#include "soc/soc.h"           // disable brownout problems
+#include "soc/rtc_cntl_reg.h"  // disable brownout problems
 #include "esp_http_server.h"
 #include "index_html.h"
 #include "constants.h"
@@ -22,35 +22,35 @@
 httpd_handle_t camera_httpd = NULL;
 httpd_handle_t stream_httpd = NULL;
 
-static esp_err_t index_handler(httpd_req_t *req){
+static esp_err_t index_handler(httpd_req_t *req) {
   httpd_resp_set_type(req, "text/html");
   return httpd_resp_send(req, (const char *)INDEX_HTML, strlen(INDEX_HTML));
 }
 
-static esp_err_t stream_handler(httpd_req_t *req){
-  camera_fb_t * fb = NULL;
+static esp_err_t stream_handler(httpd_req_t *req) {
+  camera_fb_t *fb = NULL;
   esp_err_t res = ESP_OK;
   size_t _jpg_buf_len = 0;
-  uint8_t * _jpg_buf = NULL;
-  char * part_buf[64];
+  uint8_t *_jpg_buf = NULL;
+  char *part_buf[64];
 
   res = httpd_resp_set_type(req, _STREAM_CONTENT_TYPE);
-  if(res != ESP_OK){
+  if (res != ESP_OK) {
     return res;
   }
 
-  while(true){
+  while (true) {
     fb = esp_camera_fb_get();
     if (!fb) {
       Serial.println("Camera capture failed");
       res = ESP_FAIL;
     } else {
-      if(fb->width > 400){
-        if(fb->format != PIXFORMAT_JPEG){
+      if (fb->width > 400) {
+        if (fb->format != PIXFORMAT_JPEG) {
           bool jpeg_converted = frame2jpg(fb, 80, &_jpg_buf, &_jpg_buf_len);
           esp_camera_fb_return(fb);
           fb = NULL;
-          if(!jpeg_converted){
+          if (!jpeg_converted) {
             Serial.println("JPEG compression failed");
             res = ESP_FAIL;
           }
@@ -60,25 +60,25 @@ static esp_err_t stream_handler(httpd_req_t *req){
         }
       }
     }
-    if(res == ESP_OK){
+    if (res == ESP_OK) {
       size_t hlen = snprintf((char *)part_buf, 64, _STREAM_PART, _jpg_buf_len);
       res = httpd_resp_send_chunk(req, (const char *)part_buf, hlen);
     }
-    if(res == ESP_OK){
+    if (res == ESP_OK) {
       res = httpd_resp_send_chunk(req, (const char *)_jpg_buf, _jpg_buf_len);
     }
-    if(res == ESP_OK){
+    if (res == ESP_OK) {
       res = httpd_resp_send_chunk(req, _STREAM_BOUNDARY, strlen(_STREAM_BOUNDARY));
     }
-    if(fb){
+    if (fb) {
       esp_camera_fb_return(fb);
       fb = NULL;
       _jpg_buf = NULL;
-    } else if(_jpg_buf){
+    } else if (_jpg_buf) {
       free(_jpg_buf);
       _jpg_buf = NULL;
     }
-    if(res != ESP_OK){
+    if (res != ESP_OK) {
       break;
     }
     //Serial.printf("MJPG: %uB\n",(uint32_t)(_jpg_buf_len));
@@ -86,26 +86,32 @@ static esp_err_t stream_handler(httpd_req_t *req){
   return res;
 }
 
-static esp_err_t cmd_handler(httpd_req_t *req){
-  char*  buf;
+static esp_err_t cmd_handler(httpd_req_t *req) {
+  char *buf;
   size_t buf_len;
-  char direction[32] = {0,};
-  
+  char direction[32] = {
+    0,
+  };
+
   buf_len = httpd_req_get_url_query_len(req) + 1;
   if (buf_len > 1) {
-    buf = (char*)malloc(buf_len);
-    if(!buf){
+    buf = (char *)malloc(buf_len);
+    if (!buf) {
       httpd_resp_send_500(req);
       return ESP_FAIL;
     }
     if (httpd_req_get_url_query_str(req, buf, buf_len) == ESP_OK) {
       if (httpd_query_key_value(buf, "move", direction, sizeof(direction)) == ESP_OK) {
+
+
+
+        
       } else {
         free(buf);
         httpd_resp_send_404(req);
         return ESP_FAIL;
       }
-    free(buf);
+      free(buf);
     } else {
       free(buf);
       httpd_resp_send_404(req);
@@ -116,49 +122,44 @@ static esp_err_t cmd_handler(httpd_req_t *req){
     return ESP_FAIL;
   }
 
-  sensor_t * s = esp_camera_sensor_get();
+  sensor_t *s = esp_camera_sensor_get();
   int res = 0;
-  
-  if(!strcmp(direction, "forward")) {
+
+  if (!strcmp(direction, "forward")) {
     Serial.println("Forward");
     digitalWrite(MOTOR_1_PIN_1, 1);
     digitalWrite(MOTOR_1_PIN_2, 0);
     digitalWrite(MOTOR_2_PIN_1, 1);
     digitalWrite(MOTOR_2_PIN_2, 0);
-  }
-  else if(!strcmp(direction, "left")) {
+  } else if (!strcmp(direction, "left")) {
     Serial.println("Left");
     digitalWrite(MOTOR_1_PIN_1, 0);
     digitalWrite(MOTOR_1_PIN_2, 1);
     digitalWrite(MOTOR_2_PIN_1, 1);
     digitalWrite(MOTOR_2_PIN_2, 0);
-  }
-  else if(!strcmp(direction, "right")) {
+  } else if (!strcmp(direction, "right")) {
     Serial.println("Right");
     digitalWrite(MOTOR_1_PIN_1, 1);
     digitalWrite(MOTOR_1_PIN_2, 0);
     digitalWrite(MOTOR_2_PIN_1, 0);
     digitalWrite(MOTOR_2_PIN_2, 1);
-  }
-  else if(!strcmp(direction, "backward")) {
+  } else if (!strcmp(direction, "backward")) {
     Serial.println("Backward");
     digitalWrite(MOTOR_1_PIN_1, 0);
     digitalWrite(MOTOR_1_PIN_2, 1);
     digitalWrite(MOTOR_2_PIN_1, 0);
     digitalWrite(MOTOR_2_PIN_2, 1);
-  }
-  else if(!strcmp(direction, "stop")) {
+  } else if (!strcmp(direction, "stop")) {
     Serial.println("Stop");
     digitalWrite(MOTOR_1_PIN_1, 0);
     digitalWrite(MOTOR_1_PIN_2, 0);
     digitalWrite(MOTOR_2_PIN_1, 0);
     digitalWrite(MOTOR_2_PIN_2, 0);
-  }
-  else {
+  } else {
     res = -1;
   }
 
-  if(res){
+  if (res) {
     return httpd_resp_send_500(req);
   }
 
@@ -166,27 +167,27 @@ static esp_err_t cmd_handler(httpd_req_t *req){
   return httpd_resp_send(req, NULL, 0);
 }
 
-void startCameraServer(){
+void startCameraServer() {
   httpd_config_t config = HTTPD_DEFAULT_CONFIG();
   config.server_port = 80;
   httpd_uri_t index_uri = {
-    .uri       = "/",
-    .method    = HTTP_GET,
-    .handler   = index_handler,
-    .user_ctx  = NULL
+    .uri = "/",
+    .method = HTTP_GET,
+    .handler = index_handler,
+    .user_ctx = NULL
   };
 
   httpd_uri_t cmd_uri = {
-    .uri       = "/action",
-    .method    = HTTP_GET,
-    .handler   = cmd_handler,
-    .user_ctx  = NULL
+    .uri = "/action",
+    .method = HTTP_GET,
+    .handler = cmd_handler,
+    .user_ctx = NULL
   };
   httpd_uri_t stream_uri = {
-    .uri       = "/stream",
-    .method    = HTTP_GET,
-    .handler   = stream_handler,
-    .user_ctx  = NULL
+    .uri = "/stream",
+    .method = HTTP_GET,
+    .handler = stream_handler,
+    .user_ctx = NULL
   };
   if (httpd_start(&camera_httpd, &config) == ESP_OK) {
     httpd_register_uri_handler(camera_httpd, &index_uri);
@@ -198,23 +199,38 @@ void startCameraServer(){
     httpd_register_uri_handler(stream_httpd, &stream_uri);
   }
 }
+NeoPixel pixels[8] = {
+  { 0, 50, CRGB::Red },
+  { 1, 50, CRGB::Green },
+  { 2, 50, CRGB::Blue },
+  { 3, 50, CRGB::Yellow },
+  { 4, 50, CRGB::Purple },
+  { 5, 50, CRGB::Cyan },
+  { 6, 50, CRGB::White },
+  { 7, 50, CRGB::Orange }
+};
+
+#define NUM_LEDS 8
+CRGB leds[NUM_LEDS];
+
+NeoPixelControl neoPixelControl(pixels, leds, NUM_LEDS, 22);
 
 void setup() {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //disable brownout detector
 
-  pinMode(CAMERA_FLASH, OUTPUT); // 
+  pinMode(CAMERA_FLASH, OUTPUT);  //
 
-  pinMode(NEO_PIXEL_FRONT, OUTPUT);
-  pinMode(NEO_PIXEL_REAR, OUTPUT);
-  
+  pinMode(NEO_PIXEL_PIN, OUTPUT);
+  //pinMode(NEO_PIXEL_REAR, OUTPUT); VIRKER IKKE MED CAM! GPIO 16 TODO find alternativ
+
   pinMode(MOTOR_1_PIN_1, OUTPUT);
   pinMode(MOTOR_1_PIN_2, OUTPUT);
   pinMode(MOTOR_2_PIN_1, OUTPUT);
   pinMode(MOTOR_2_PIN_2, OUTPUT);
-  
+
   Serial.begin(115200);
   Serial.setDebugOutput(false);
-  
+
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -235,9 +251,9 @@ void setup() {
   config.pin_pwdn = PWDN_GPIO_NUM;
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
-  config.pixel_format = PIXFORMAT_JPEG; 
-  
-  if(psramFound()){
+  config.pixel_format = PIXFORMAT_JPEG;
+
+  if (psramFound()) {
     config.frame_size = FRAMESIZE_VGA;
     config.jpeg_quality = 10;
     config.fb_count = 2;
@@ -248,10 +264,10 @@ void setup() {
   }
 
   // Replace with your network credentials
-  const char* ssid = "frey-pirates-bil";
-  const char* password = "codingpirates";
+  const char *ssid = "frey-pirates-bil";
+  const char *password = "codingpirates";
   const int channel = 9;
-  
+
   // Camera init
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
@@ -264,17 +280,19 @@ void setup() {
 
   Serial.println("");
   Serial.println("WiFi connected");
-  
+
   Serial.print("Camera Stream Ready! Go to: http://");
   Serial.println(WiFi.softAPIP());
 
- // turn_off_all_lights();
-  
+  // turn_off_all_lights();
+
   // Start streaming web server
   startCameraServer();
 
+  neoPixelControl.setup();
+  //neoPixelControl.turn_on();
 }
 
 void loop() {
-  
+  neoPixelControl.loop();
 }

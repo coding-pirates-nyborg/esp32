@@ -112,8 +112,7 @@
 #define MOTOR_2_PIN_1    13
 #define MOTOR_2_PIN_2    12
 
-#define NEO_PIXEL_FRONT   2
-#define NEO_PIXEL_REAR    16
+#define NEO_PIXEL_PIN    2
 
 #define CAMERA_FLASH      4  
 
