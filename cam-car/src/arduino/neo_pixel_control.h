@@ -37,22 +37,14 @@ class NeoPixelControl {
     CRGB *leds;
     unsigned int led_pin;
 
-    void FillLEDsFromPaletteColors( uint8_t colorIndex);
-    void ChangePalettePeriodically();
-    void SetupTotallyRandomPalette();
-    void SetupBlackAndWhiteStripedPalette();
-    void SetupPurpleAndGreenPalette();
-
   public:
     NeoPixelControl(NeoPixel* pixels, CRGB *leds, int num_leds, int led_pin);
 
     void setup();
     void turn_on();
-    void turn_off_all_lights();
-    void blink(NeoPixel* pixels, int duration_ms, int delay_ms);
-    void loop();
-
-
-};
+    void turn_off();
+    void blink(int duration_ms, int count);
+    
+  };
 
 #endif // NEO_PIXEL_CONTROL_H

@@ -30,7 +30,9 @@
 httpd_handle_t camera_httpd = NULL;
 httpd_handle_t stream_httpd = NULL;
 
-NeoPixel pixels[8] = {
+#define NUM_LEDS 8
+
+NeoPixel pixels[NUM_LEDS] = {
     {0, 50, CRGB::Red},
     {1, 50, CRGB::Green},
     {2, 50, CRGB::Blue},
@@ -40,11 +42,11 @@ NeoPixel pixels[8] = {
     {6, 50, CRGB::White},
     {7, 50, CRGB::Orange}};
 
-#define NUM_LEDS 8
 CRGB leds[NUM_LEDS];
 
+#define LED_PIN 22
 
-NeoPixelControl neoPixelControl(pixels, leds, NUM_LEDS, 22);
+NeoPixelControl neoPixelControl(pixels, leds, NUM_LEDS, LED_PIN);
 
 static esp_err_t index_handler(httpd_req_t *req)
 {
@@ -152,7 +154,7 @@ static esp_err_t cmd_handler(httpd_req_t *req)
       if (httpd_query_key_value(buf, "cmd", cmd, sizeof(cmd)) == ESP_OK)
       {
         Context *context = new Context();
-        Serial.printf("Received command: %s",cmd);
+        Serial.printf("Received command: %s ",cmd);
         if (strcmp(cmd, "forward") == 0)
         {
           context->setStrategy(new Forward());
@@ -179,12 +181,14 @@ static esp_err_t cmd_handler(httpd_req_t *req)
           context->executeStrategy();
         }
         else if (strcmp(cmd, "killLEDS") == 0){
-          neoPixelControl.turn_off_all_lights(); 
+          neoPixelControl.turn_off(); 
         }
         else if (strcmp(cmd, "turnOnLEDS") == 0){
           neoPixelControl.turn_on();
         }
-
+        else if (strcmp(cmd, "blinkLEDS") == 0){
+          neoPixelControl.blink(500, 5);
+        }
         else
         {
           res = 1;
@@ -335,10 +339,9 @@ void setup()
   startCameraServer();
 
   neoPixelControl.setup();
-  // neoPixelControl.turn_on();
 }
 
 void loop()
 {
-  neoPixelControl.loop();
+
 }

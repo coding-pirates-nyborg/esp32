@@ -103,8 +103,9 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
 
     <table>
       <tr>
-        <td rowspan="3" align="center"><button class="button" onmousedown="sendCommand('killLEDS');">Kill LEDS</button></td>
-        <td rowspan="3" align="center"><button class="button" onmousedown="sendCommand('turnOnLEDS');"> Turn on LED's</button></td>
+        <td rowspan="3" align="center"><button class="button" onmousedown="sendCommand('killLEDS');">Kill All LEDS</button></td>
+        <td rowspan="3" align="center"><button class="button" onmousedown="sendCommand('turnOnLEDS');">Turn on LED's</button></td>
+        <td rowspan="3" align="center"><button class="button" onmousedown="sendCommand('blinkLEDS');">Blink</button></td>
       </tr>
     </table>
   <!-- </div> -->

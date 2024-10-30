@@ -5,7 +5,7 @@
 
 struct NeoPixel {
     int led_index;
-    int light_strength;
+    int brightness;
     CRGB rgb_color;
 };
 
