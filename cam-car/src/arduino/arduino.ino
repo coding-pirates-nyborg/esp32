@@ -42,9 +42,18 @@ NeoPixel pixels[NUM_LEDS] = {
     {6, 50, CRGB::White},
     {7, 50, CRGB::Orange}};
 
-CRGB leds[NUM_LEDS];
+CRGB leds[NUM_LEDS] = {
+    pixels[0].rgb_color,
+    pixels[1].rgb_color,
+    pixels[2].rgb_color,
+    pixels[3].rgb_color,
+    pixels[4].rgb_color,
+    pixels[5].rgb_color,
+    pixels[6].rgb_color,
+    pixels[7].rgb_color
+  };
 
-#define LED_PIN 22
+#define LED_PIN 22  
 
 NeoPixelControl neoPixelControl(pixels, leds, NUM_LEDS, LED_PIN);
 

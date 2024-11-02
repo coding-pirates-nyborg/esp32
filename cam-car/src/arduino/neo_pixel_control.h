@@ -41,6 +41,7 @@ class NeoPixelControl {
     NeoPixelControl(NeoPixel* pixels, CRGB *leds, int num_leds, int led_pin);
 
     void setup();
+    void reset();
     void turn_on();
     void turn_off();
     void blink(int duration_ms, int count);
